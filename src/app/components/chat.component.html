@@ -1,0 +1,57 @@
+
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="card my-3">
+          <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+              <li class="nav-item me-2" *ngIf="!connected">
+                <input [(ngModel)]="message.username" class="form-control" placeholder="Tu Username..." name="username">
+              </li>
+              <li class="nav-item" *ngIf="!connected">
+                <button class="btn btn-success" type="button" (click)="connect()" [disabled]="!message.username">Conectar</button>
+              </li>
+  
+              <li class="nav-item d-flex gap-2" *ngIf="connected">
+                <button class="btn btn-warning" type="button" (click)="deconnect()">
+                  Desconectar Chat
+                </button>
+
+              </li>
+            </ul>
+          </div>
+  
+          <div class="card-body" style="overflow-y: auto; height: 360px;" *ngIf="connected">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-black" *ngFor="let message of messages">
+                @if (message.type == 'NEW_USER') {
+                  {{message.date | date: 'shortTime'}}: {{message.text}} conectado! <span [ngStyle]="{'color': message.color}"></span>
+                } @else if (message.type == 'MESSAGE') {
+                  {{message.date | date: 'shortTime'}} <span [ngStyle]="{'color': message.color , 'font-weight': 'bold'}">{{ message.username }}: </span>{{message.text}}
+                }
+              </li>
+            </ul>
+          </div>
+  
+          <div class="card-footer" *ngIf="connected">
+            <form (ngSubmit)="onSendMessage()">
+              <div class="row g-2">
+                <div class="col">
+                  <input class="form-control" 
+                    name="text" 
+                    [(ngModel)]="message.text" 
+                    placeholder="Escribe un mensaje..."
+                    (keyup)="onWritingEvent()">
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary w-100">Enviar</button>
+                </div>
+              </div>
+            </form>
+  
+            <div class="mx-2 my-1">{{ writing }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
